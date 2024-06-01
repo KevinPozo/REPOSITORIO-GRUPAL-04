@@ -5,20 +5,21 @@
  * 
  * 
  * */
-package Game;
+package Model;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Polygon;
 
-import Interfaces.IDieable;
-import Interfaces.IDrawable;
-import Interfaces.ILife;
-import Interfaces.IMovable;
-import Interfaces.IScore;
-import Interfaces.IShootable;
-import Interfaces.IUsername;
+import Controller.GameController;
+import Model.Interfaces.IDieable;
+import Model.Interfaces.IDrawable;
+import Model.Interfaces.ILife;
+import Model.Interfaces.IMovable;
+import Model.Interfaces.IScore;
+import Model.Interfaces.IShootable;
+import Model.Interfaces.IUsername;
 
 public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsername, IScore , ILife{
     private int x, y; 
@@ -28,16 +29,16 @@ public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsernam
     private int score; 
     private String username; 
     private boolean dead = false;
-    private GameContainer gameContainer; 
+    private GameController gameController;
     
-    public Hero(int x, int y, int width, int height, String username, GameContainer gameContainer) {
+    public Hero(int x, int y, int width, int height, String username, GameController gameController) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.score = 0; 
         this.username = username;
-        this.gameContainer = gameContainer;
+        this.gameController = gameController;
         this.maxHealth = 100;
         this.currentHealth = this.maxHealth;
     }
@@ -92,7 +93,7 @@ public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsernam
         int bulletSpeed = 10;
 
         Bullet bullet = new Bullet(bulletX, bulletY, bulletWidth, bulletHeight, bulletSpeed);
-        gameContainer.addBullet(bullet);
+        gameController.addBullet(bullet);
     }
 
     @Override

@@ -5,7 +5,7 @@
  * 
  * 
  * */
-package Interfaces;
+package Model.Interfaces;
 
 public interface IScore {
 	public int getScore();

@@ -5,7 +5,7 @@
  * 
  * 
  * */
-package Interfaces;
+package Model.Interfaces;
 
 public interface IUsername {
     public String getUsername();

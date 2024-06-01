@@ -5,8 +5,9 @@
  * 
  * 
  * */
-package Interfaces;
+package Model.Interfaces;
 
-public interface IShootable {
-public void shoot();
+public interface IDieable {
+public void die();
+public boolean isDead();
 }

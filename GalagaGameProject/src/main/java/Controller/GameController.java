@@ -5,7 +5,7 @@
  * 
  * 
  * */
-package Game;
+package Controller;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -15,12 +15,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import Interfaces.IDieable;
-import Interfaces.IDrawable;
-import Interfaces.ILife;
-import Interfaces.IMovable;
+import Model.Enemy;
+import Model.Hero;
+import Model.Interfaces.IDieable;
+import Model.Interfaces.IDrawable;
+import Model.Interfaces.ILife;
+import Model.Interfaces.IMovable;
+import Model.Bullet;
+import Model.Line;
 
-public class GameContainer {
+public class GameController {
 	private static final int HEIGHT = 600;
 	private List<IDrawable> drawables;
 	private List<IMovable> movables;
@@ -33,7 +37,7 @@ public class GameContainer {
 	private Hero hero;
 	private ILife lifeHero;
 
-	public GameContainer() {
+	public GameController() {
 		drawables = new ArrayList<>();
 		movables = new ArrayList<>();
 		bullets = new ArrayList<>();

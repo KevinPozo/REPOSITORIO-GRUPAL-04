@@ -5,9 +5,9 @@
  * 
  * 
  * */
-package Interfaces;
+package Model.Interfaces;
 
-public interface IDieable {
-public void die();
-public boolean isDead();
+public interface IMovable {
+public void move(int dx, int dy);
+
 }

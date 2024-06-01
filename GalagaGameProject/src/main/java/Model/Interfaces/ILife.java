@@ -5,7 +5,7 @@
  * 
  * 
  * */
-package Interfaces;
+package Model.Interfaces;
 
 public interface ILife extends IDrawable, IMovable{
     int getMaxHealth(); 

@@ -5,7 +5,7 @@
  * 
  * 
  * */
-package Interfaces;
+package Model.Interfaces;
 
 import java.awt.Graphics;
 

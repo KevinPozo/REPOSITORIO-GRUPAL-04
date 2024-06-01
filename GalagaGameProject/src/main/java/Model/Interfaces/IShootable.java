@@ -5,9 +5,8 @@
  * 
  * 
  * */
-package Interfaces;
+package Model.Interfaces;
 
-public interface IMovable {
-public void move(int dx, int dy);
-
+public interface IShootable {
+public void shoot();
 }

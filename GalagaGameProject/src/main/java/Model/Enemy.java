@@ -5,15 +5,15 @@
  * 
  * 
  * */
-package Game;
+package Model;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
-import Interfaces.IDieable;
-import Interfaces.IDrawable;
-import Interfaces.IMovable;
-import Interfaces.IScore;
+import Model.Interfaces.IDieable;
+import Model.Interfaces.IDrawable;
+import Model.Interfaces.IMovable;
+import Model.Interfaces.IScore;
 
 public class Enemy implements IDrawable, IMovable, IDieable, IScore {
     private int x, y; 

@@ -5,12 +5,12 @@
  * 
  * 
  * */
-package Game;
+package Model;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
-import Interfaces.IDrawable;
+import Model.Interfaces.IDrawable;
 
 public class Line implements IDrawable {
     private int x1, y1, x2, y2;

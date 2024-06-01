@@ -5,7 +5,9 @@
  * 
  * 
  * */
-package Game;
+package View;
+
+import Controller.GameController;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -18,14 +20,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.Timer;
 
-public class GameFrame extends JFrame implements KeyListener {
+public class GameView extends JFrame implements KeyListener {
     private JPanel gamePanel;
-    private GameContainer gameContainer;
+    private GameController gameController;
     private Timer gameTimer;
     private int delay = 1000 / 60; 
     private int speed = 5; 
 
-    public GameFrame() {
+    public GameView() {
         setTitle("Galaga Game KevinPozo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -35,13 +37,13 @@ public class GameFrame extends JFrame implements KeyListener {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 setBackground(Color.BLACK);
-                gameContainer.render(g);
+                gameController.render(g);
             }
         };
         gamePanel.setPreferredSize(new Dimension(800, 600));
         add(gamePanel);
 
-        gameContainer = new GameContainer();
+        gameController = new GameController();
 
         addKeyListener(this);
 
@@ -52,7 +54,7 @@ public class GameFrame extends JFrame implements KeyListener {
         gameTimer = new Timer(delay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameContainer.update();
+                gameController.update();
                 gamePanel.repaint();
             }
         });
@@ -80,13 +82,13 @@ public class GameFrame extends JFrame implements KeyListener {
                 dx = speed;
                 break;
             case KeyEvent.VK_H:
-                gameContainer.heroShoot(); 
+                gameController.heroShoot();
                 break;
             default:
                 break;
         }
 
-        gameContainer.moveHero(dx, dy);
+        gameController.moveHero(dx, dy);
     }
 
 
@@ -99,6 +101,6 @@ public class GameFrame extends JFrame implements KeyListener {
     }
 
     public static void main(String[] args) {
-        new GameFrame();    
+        new GameView();
     }
 }

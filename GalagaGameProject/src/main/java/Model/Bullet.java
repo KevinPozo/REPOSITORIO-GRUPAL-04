@@ -5,14 +5,13 @@
  * 
  * 
  * */
-package Game;
+package Model;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
-import Interfaces.IDieable;
-import Interfaces.IDrawable;
-import Interfaces.IMovable;
+import Model.Interfaces.IDrawable;
+import Model.Interfaces.IMovable;
 
 public class Bullet implements IDrawable, IMovable {
     private int x, y; 
