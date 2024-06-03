@@ -1,10 +1,3 @@
-/**
- * 
- * @author KevinPozo
- * Title: Inversión de Dependencia y Responsabilidad Única.
- * 
- * 
- * */
 package Controller;
 
 import java.awt.Color;
@@ -14,6 +7,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import Model.Enemy;
 import Model.Hero;
@@ -26,10 +20,13 @@ import Model.Line;
 
 public class GameController {
 	private static final int HEIGHT = 600;
+	private static final int WIDTH = 800;
 	private List<IDrawable> drawables;
 	private List<IMovable> movables;
 	private List<IDrawable> bullets;
 	private List<IDieable> deadElements;
+	private int level;
+	private Random random;
 
 	private static final int PLAYER_TOP_LIMIT = 2 * HEIGHT / 3 + 21;
 	private static final int LINE_Y_POSITION = 2 * HEIGHT / 3;
@@ -42,6 +39,8 @@ public class GameController {
 		movables = new ArrayList<>();
 		bullets = new ArrayList<>();
 		deadElements = new ArrayList<>();
+		random = new Random();
+		level = 1;
 
 		hero = new Hero(400, 450, 50, 25, "Walker77", this);
 		addDrawable(hero);
@@ -56,10 +55,10 @@ public class GameController {
 		int startX = 50;
 		int startY = 50;
 		int gapX = 100;
-		int numEnemies = 7;
+		int numEnemies = 5 + level * 2; // Increase the number of enemies with each level
 
 		for (int i = 0; i < numEnemies; i++) {
-			Enemy enemy = new Enemy(startX + i * gapX, startY, enemyWidth, enemyHeight, 25);
+			Enemy enemy = new Enemy(startX + i * gapX, startY, enemyWidth, enemyHeight, 25, this);
 			addDrawable(enemy);
 			addMovable(enemy);
 		}
@@ -104,11 +103,15 @@ public class GameController {
 		checkEnemiesCrossedLine();
 
 		checkGameOver();
-		checkBulletEnemyCollision();
+		checkBulletCollision();
+
+		if (!gameOver && random.nextInt(100) < level) {
+			enemyShoot();
+		}
 	}
 
 	public void render(Graphics g) {
-		Line line = new Line(0, LINE_Y_POSITION, 800, LINE_Y_POSITION);
+		Line line = new Line(0, LINE_Y_POSITION, WIDTH, LINE_Y_POSITION);
 		line.draw(g);
 
 		for (IDrawable drawable : drawables) {
@@ -138,6 +141,8 @@ public class GameController {
 		int textY = barY + barHeight + 15;
 		g.drawString("Life: " + hero.getCurrentHealth(), textX, textY);
 
+		g.drawString("Level: " + level, WIDTH - 100, 20); // Display the current level
+
 		if (gameOver) {
 			g.setColor(Color.RED);
 			g.setFont(new Font("Comic Sans MS", Font.BOLD, 36));
@@ -161,6 +166,10 @@ public class GameController {
 
 			deadIterator.remove();
 		}
+
+		if (drawables.stream().noneMatch(d -> d instanceof Enemy)) {
+			levelUp();
+		}
 	}
 
 	private void moveEnemiesDown() {
@@ -171,11 +180,19 @@ public class GameController {
 		}
 	}
 
+	private void enemyShoot() {
+		for (IMovable movable : movables) {
+			if (movable instanceof Enemy) {
+				((Enemy) movable).shoot();
+			}
+		}
+	}
+
 	public void heroShoot() {
 		int heroX = hero.getX();
 		int heroY = hero.getY();
 
-		Bullet bullet = new Bullet((heroX + hero.getWidth() / 2) - 27, heroY - 15, 5, 10, 10);
+		Bullet bullet = new Bullet((heroX + hero.getWidth() / 2) - 27, heroY - 15, 5, 10, 10, false);
 		addShootable(bullet);
 	}
 
@@ -185,37 +202,55 @@ public class GameController {
 			int newY = hero.getY() + dy;
 
 			int playerBottom = newY + hero.getHeight();
-			if (newX >= 0 && newX + hero.getWidth() <= 800 && newY >= 0 && playerBottom <= HEIGHT
+			if (newX >= 0 && newX + hero.getWidth() <= WIDTH && newY >= 0 && playerBottom <= HEIGHT
 					&& newY >= PLAYER_TOP_LIMIT) {
 				hero.move(dx, dy);
 			}
 		}
 	}
 
-	private void checkBulletEnemyCollision() {
+	private void checkBulletCollision() {
 		Iterator<IDrawable> bulletIterator = bullets.iterator();
 		while (bulletIterator.hasNext()) {
 			Bullet bullet = (Bullet) bulletIterator.next();
-			bullet.move(0, -bullet.getSpeed());
-			if (bullet.getY() == HEIGHT) {
+			if (bullet.isEnemyBullet()) {
+				bullet.move(0, bullet.getSpeed());
+			} else {
+				bullet.move(0, -bullet.getSpeed());
+			}
+
+			if (bullet.getY() == HEIGHT || bullet.getY() == 0) {
 				bulletIterator.remove();
 			} else {
-				Iterator<IDrawable> drawableIterator = drawables.iterator();
-				while (drawableIterator.hasNext()) {
-					IDrawable drawable = drawableIterator.next();
-					if (drawable instanceof Enemy) {
-						Enemy enemy = (Enemy) drawable;
-						Rectangle bulletRect = new Rectangle(bullet.getX(), bullet.getY(), bullet.getWidth(),
-								bullet.getHeight());
-						Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(),
-								enemy.getHeight());
-						if (bulletRect.intersects(enemyRect)) {
-							bulletIterator.remove();
-							enemy.die();
-							hero.increaseScore(25);
-							drawableIterator.remove();
-							addDieable(enemy);
-							break;
+				if (!bullet.isEnemyBullet()) {
+					Iterator<IDrawable> drawableIterator = drawables.iterator();
+					while (drawableIterator.hasNext()) {
+						IDrawable drawable = drawableIterator.next();
+						if (drawable instanceof Enemy) {
+							Enemy enemy = (Enemy) drawable;
+							Rectangle bulletRect = new Rectangle(bullet.getX(), bullet.getY(), bullet.getWidth(),
+									bullet.getHeight());
+							Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(),
+									enemy.getHeight());
+							if (bulletRect.intersects(enemyRect)) {
+								bulletIterator.remove();
+								enemy.die();
+								hero.increaseScore(25);
+								drawableIterator.remove();
+								addDieable(enemy);
+								break;
+							}
+						}
+					}
+				} else {
+					Rectangle bulletRect = new Rectangle(bullet.getX(), bullet.getY(), bullet.getWidth(),
+							bullet.getHeight());
+					Rectangle heroRect = new Rectangle(hero.getX(), hero.getY(), hero.getWidth(), hero.getHeight());
+					if (bulletRect.intersects(heroRect)) {
+						bulletIterator.remove();
+						lifeHero.decreaseHealth(10);
+						if (lifeHero.getCurrentHealth() <= 0) {
+							gameOver = true;
 						}
 					}
 				}
@@ -253,5 +288,10 @@ public class GameController {
 		if (lifeHero.getCurrentHealth() <= 0) {
 			gameOver = true;
 		}
+	}
+
+	private void levelUp() {
+		level++;
+		createEnemies();
 	}
 }

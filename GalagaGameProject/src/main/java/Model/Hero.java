@@ -1,10 +1,3 @@
-/**
- * 
- * @author KevinPozo
- * Title: Inversión de Dependencia y Responsabilidad Única.
- * 
- * 
- * */
 package Model;
 
 import java.awt.Color;
@@ -22,21 +15,21 @@ import Model.Interfaces.IShootable;
 import Model.Interfaces.IUsername;
 
 public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsername, IScore , ILife{
-    private int x, y; 
+    private int x, y;
     private int maxHealth;
     private int currentHealth;
-    private int width, height; 
-    private int score; 
-    private String username; 
+    private int width, height;
+    private int score;
+    private String username;
     private boolean dead = false;
     private GameController gameController;
-    
+
     public Hero(int x, int y, int width, int height, String username, GameController gameController) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.score = 0; 
+        this.score = 0;
         this.username = username;
         this.gameController = gameController;
         this.maxHealth = 100;
@@ -50,23 +43,23 @@ public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsernam
         int[] yPoints = {y - height, y + height, y + height};
         Polygon triangle = new Polygon(xPoints, yPoints, 3);
         g.fillPolygon(triangle);
-        
+
         Font font = new Font("Comic Sans MS", Font.BOLD, 16);
         g.setFont(font);
 
         g.drawString("Player: " + getUsername(), 10, 20);
-        
+
         g.drawString("Score: " + getScore(), 10, 40);
-        
-        int barWidth = 100; 
-        int barHeight = 10; 
-        int barX = 10; 
-        int barY = 60; 
-        double healthPercentage = (double) currentHealth / maxHealth; 
-        
+
+        int barWidth = 100;
+        int barHeight = 10;
+        int barX = 10;
+        int barY = 60;
+        double healthPercentage = (double) currentHealth / maxHealth;
+
         g.setColor(Color.BLACK);
         g.drawRect(barX, barY, barWidth, barHeight);
-        
+
         g.setColor(Color.RED);
         g.fillRect(barX, barY, (int) (barWidth * healthPercentage), barHeight);
         g.setColor(Color.WHITE);
@@ -77,7 +70,6 @@ public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsernam
         g.drawString("Life: " + getCurrentHealth(), textX, textY);
     }
 
-
     @Override
     public void move(int dx, int dy) {
         this.x += dx;
@@ -86,13 +78,13 @@ public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsernam
 
     @Override
     public void shoot() {
-        int bulletX = this.x + this.width / 2; 
+        int bulletX = this.x + this.width / 2;
         int bulletY = this.y;
-        int bulletWidth = 5; 
-        int bulletHeight = 10; 
+        int bulletWidth = 5;
+        int bulletHeight = 10;
         int bulletSpeed = 10;
 
-        Bullet bullet = new Bullet(bulletX, bulletY, bulletWidth, bulletHeight, bulletSpeed);
+        Bullet bullet = new Bullet(bulletX, bulletY, bulletWidth, bulletHeight, bulletSpeed, false);
         gameController.addBullet(bullet);
     }
 
@@ -159,7 +151,6 @@ public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsernam
             currentHealth = 0;
         }
     }
-
 
     @Override
     public void increaseHealth(int amount) {

@@ -1,10 +1,3 @@
-/**
- * 
- * @author KevinPozo
- * Title: Inversión de Dependencia y Responsabilidad Única.
- * 
- * 
- * */
 package Model;
 
 import java.awt.Color;
@@ -14,22 +7,27 @@ import Model.Interfaces.IDrawable;
 import Model.Interfaces.IMovable;
 
 public class Bullet implements IDrawable, IMovable {
-    private int x, y; 
-    private int width, height; 
-    private int speed; 
+    private int x, y;
+    private int width, height;
+    private int speed;
+    private boolean isEnemyBullet;
 
-    public Bullet(int x, int y, int width, int height, int speed) {
+    public Bullet(int x, int y, int width, int height, int speed, boolean isEnemyBullet) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.speed = speed;
+        this.isEnemyBullet = isEnemyBullet;
     }
 
     @Override
     public void draw(Graphics g) {
-        
-        g.setColor(Color.WHITE);
+        if (isEnemyBullet) {
+            g.setColor(Color.RED);
+        } else {
+            g.setColor(Color.WHITE);
+        }
         g.fillRect(x, y, width, height);
     }
 
@@ -57,5 +55,9 @@ public class Bullet implements IDrawable, IMovable {
 
     public int getSpeed() {
         return speed;
+    }
+
+    public boolean isEnemyBullet() {
+        return isEnemyBullet;
     }
 }
