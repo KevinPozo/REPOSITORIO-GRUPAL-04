@@ -55,14 +55,28 @@ public class GameController {
 		int startX = 50;
 		int startY = 50;
 		int gapX = 100;
-		int numEnemies = 5 + level * 2; // Increase the number of enemies with each level
+		int numEnemies = 5;
+
+		int enemySpeedFactor = 1;
+		int enemyHealth = 25;
+
+		if (level == 1) {
+			enemySpeedFactor = 1;
+			enemyHealth = 10;
+		} else {
+			enemySpeedFactor = 1;
+			enemyHealth = 25;
+		}
 
 		for (int i = 0; i < numEnemies; i++) {
-			Enemy enemy = new Enemy(startX + i * gapX, startY, enemyWidth, enemyHeight, 25, this);
+			Enemy enemy = new Enemy(startX + i * gapX, startY, enemyWidth, enemyHeight, enemyHealth, this);
+			enemy.setSpeedFactor(enemySpeedFactor);
 			addDrawable(enemy);
 			addMovable(enemy);
 		}
 	}
+
+
 
 	public void addDrawable(IDrawable drawable) {
 		drawables.add(drawable);
@@ -196,18 +210,19 @@ public class GameController {
 		addShootable(bullet);
 	}
 
-	public void moveHero(int dx, int dy) {
+	public void moveHero(int dx, int dy, int speed) {
 		if (hero != null) {
-			int newX = (hero.getX() + dx) - 25;
-			int newY = hero.getY() + dy;
+			int newX = (hero.getX() + dx * speed) - 25;
+			int newY = hero.getY() + dy * speed;
 
 			int playerBottom = newY + hero.getHeight();
 			if (newX >= 0 && newX + hero.getWidth() <= WIDTH && newY >= 0 && playerBottom <= HEIGHT
 					&& newY >= PLAYER_TOP_LIMIT) {
-				hero.move(dx, dy);
+				hero.move(dx * speed, dy * speed);
 			}
 		}
 	}
+
 
 	private void checkBulletCollision() {
 		Iterator<IDrawable> bulletIterator = bullets.iterator();
@@ -294,4 +309,6 @@ public class GameController {
 		level++;
 		createEnemies();
 	}
+
+
 }

@@ -88,7 +88,7 @@ public class GameView extends JFrame implements KeyListener {
                 break;
         }
 
-        gameController.moveHero(dx, dy);
+        gameController.moveHero(dx, dy,2);
     }
 
 

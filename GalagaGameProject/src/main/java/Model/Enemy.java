@@ -15,6 +15,7 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
     private boolean dead = false;
     private int score;
     private GameController gameController;
+    private int speedFactor; // Nuevo campo para el factor de velocidad
 
     public Enemy(int x, int y, int width, int height, int score, GameController gameController) {
         this.x = x;
@@ -23,6 +24,7 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
         this.height = height;
         this.score = score;
         this.gameController = gameController;
+        this.speedFactor = 1; // Inicialmente establecido en 1
     }
 
     @Override
@@ -47,8 +49,10 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
 
     @Override
     public void move(int dx, int dy) {
-        this.x += dx;
-        this.y += dy;
+        int pixelsToMoveX = dx * speedFactor; // Ajusta el movimiento horizontal según el factor de velocidad
+        int pixelsToMoveY = dy * speedFactor; // Ajusta el movimiento vertical según el factor de velocidad
+        this.x += pixelsToMoveX;
+        this.y += pixelsToMoveY;
     }
 
     @Override
@@ -101,7 +105,9 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
     public int getHeight() {
         return height;
     }
-    public int[] rotateXRight(int[] xPoints, int[] yPoints, int centerX, int centerY) {
+
+    // Métodos para rotar puntos (ya existentes)
+    private int[] rotateXRight(int[] xPoints, int[] yPoints, int centerX, int centerY) {
         int[] rotatedX = new int[xPoints.length];
         for (int i = 0; i < xPoints.length; i++) {
             rotatedX[i] = centerX + (yPoints[i] - centerY);
@@ -109,16 +115,51 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
         return rotatedX;
     }
 
-    public int[] rotateYRight(int[] xPoints, int[] yPoints, int centerX, int centerY) {
+    private int[] rotateYRight(int[] xPoints, int[] yPoints, int centerX, int centerY) {
         int[] rotatedY = new int[yPoints.length];
         for (int i = 0; i < yPoints.length; i++) {
             rotatedY[i] = centerY - (xPoints[i] - centerX);
         }
         return rotatedY;
     }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setDead(boolean dead) {
+        this.dead = dead;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public GameController getGameController() {
+        return gameController;
+    }
+
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
+    }
+
+    public int getSpeedFactor() {
+        return speedFactor;
+    }
+
+    public void setSpeedFactor(int speedFactor) {
+        this.speedFactor = speedFactor;
+    }
 }
-
-
-
-
-

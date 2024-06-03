@@ -24,7 +24,7 @@ public class Bullet implements IDrawable, IMovable {
     @Override
     public void draw(Graphics g) {
         if (isEnemyBullet) {
-            g.setColor(Color.RED);
+            g.setColor(Color.WHITE);
         } else {
             g.setColor(Color.WHITE);
         }
