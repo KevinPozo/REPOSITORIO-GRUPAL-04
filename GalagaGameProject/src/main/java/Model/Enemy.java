@@ -16,6 +16,7 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
     private int score;
     private GameController gameController;
     private int speedFactor; // Nuevo campo para el factor de velocidad
+    private int shotsReceived;
 
     public Enemy(int x, int y, int width, int height, int score, GameController gameController) {
         this.x = x;
@@ -25,6 +26,7 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
         this.score = score;
         this.gameController = gameController;
         this.speedFactor = 1; // Inicialmente establecido en 1
+        this.shotsReceived = 0;
     }
 
     @Override
@@ -147,19 +149,18 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
         this.score = score;
     }
 
-    public GameController getGameController() {
-        return gameController;
-    }
-
-    public void setGameController(GameController gameController) {
-        this.gameController = gameController;
-    }
-
-    public int getSpeedFactor() {
-        return speedFactor;
-    }
-
     public void setSpeedFactor(int speedFactor) {
         this.speedFactor = speedFactor;
+    }
+    public void increaseShotsReceived() {
+        this.shotsReceived++;
+    }
+
+    public int getShotsReceived() {
+        return shotsReceived;
+    }
+
+    public void setShotsReceived(int shotsReceived) {
+        this.shotsReceived = shotsReceived;
     }
 }
