@@ -169,4 +169,16 @@ public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsernam
     public void setCurrentHealth(int currentHealth) {
         this.currentHealth = currentHealth;
     }
+
+    public int getDamageToEnemy() {
+        if (currentHealth < 50) {
+            return 5; // Si tengo menos de 50 puntos de vida, hago 5 de daño
+        } else if (currentHealth >= 50 && currentHealth <= 75) {
+            return 10; // Si tengo entre 50 y 75 puntos de vida, hago 10 de daño
+        } else {
+            return 15; // Si tengo más de 75 puntos de vida, hago 15 de daño
+        }
+    }
+
+
 }
