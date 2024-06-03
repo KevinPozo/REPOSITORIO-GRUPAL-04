@@ -57,6 +57,7 @@ public class GameController {
 		int startX = 150;
 		int startY = 50;
 		int gapX = 100;
+
 		int numEnemies = (level == 1) ? 5 : 10;
 
 		int enemySpeedFactor = 1;
@@ -231,6 +232,7 @@ public class GameController {
 			} else {
 				bullet.move(0, -bullet.getSpeed());
 			}
+
 			if (bullet.getY() == HEIGHT || bullet.getY() == 0) {
 				bulletIterator.remove();
 			} else {
@@ -246,14 +248,18 @@ public class GameController {
 									enemy.getHeight());
 							if (bulletRect.intersects(enemyRect)) {
 								bulletIterator.remove();
-								enemy.die();
-								if(level==1){
-									hero.increaseScore(enemy.getScore());
-								}else if(level==2){
-									hero.increaseScore(enemy.getScore());
+								enemy.increaseShotsReceived();
+								if ((level == 1 && enemy.getShotsReceived() >= 1) ||
+										(level == 2 && enemy.getShotsReceived() >= 2)) {
+									enemy.die();
+									if (level == 1) {
+										hero.increaseScore(enemy.getScore());
+									} else if (level == 2) {
+										hero.increaseScore(enemy.getScore());
+									}
+									drawableIterator.remove();
+									addDieable(enemy);
 								}
-								drawableIterator.remove();
-								addDieable(enemy);
 								break;
 							}
 						}
@@ -264,10 +270,10 @@ public class GameController {
 					Rectangle heroRect = new Rectangle(hero.getX(), hero.getY(), hero.getWidth(), hero.getHeight());
 					if (bulletRect.intersects(heroRect)) {
 						bulletIterator.remove();
-						if(level==1){
-							lifeHero.decreaseHealth(5);
-						}else if(level==2){
-							lifeHero.decreaseHealth(10);
+						if (level == 1) {
+							lifeHero.decreaseHealth(5); // Reduce la vida en 5 en nivel 1
+						} else if (level == 2) {
+							lifeHero.decreaseHealth(10); // Reduce la vida en 10 en nivel 2
 						}
 						if (lifeHero.getCurrentHealth() <= 0) {
 							gameOver = true;
@@ -277,7 +283,6 @@ public class GameController {
 			}
 		}
 	}
-
 	public void checkEnemiesCrossedLine() {
 		Iterator<IDrawable> iterator = drawables.iterator();
 		int totalDamage = 0;
