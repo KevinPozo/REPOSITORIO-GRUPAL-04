@@ -15,8 +15,10 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
     private boolean dead = false;
     private int score;
     private GameController gameController;
-    private int speedFactor; // Nuevo campo para el factor de velocidad
+    private int speedFactor;
     private int shotsReceived;
+    private int health;
+    private int maxHealth;
 
     public Enemy(int x, int y, int width, int height, int score, GameController gameController) {
         this.x = x;
@@ -25,25 +27,23 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
         this.height = height;
         this.score = score;
         this.gameController = gameController;
-        this.speedFactor = 1; // Inicialmente establecido en 1
+        this.speedFactor = 1;
         this.shotsReceived = 0;
+        this.health = 100;
+        this.maxHealth = 100;
     }
 
     @Override
     public void draw(Graphics g) {
-        // Coordenadas originales de los puntos de la figura
         int[] xPoints = {x, x + width, x + width, x, x + width / 2};
         int[] yPoints = {y, y, y + height, y + height, y + height / 2};
 
-        // Calcular el centro de la figura para la rotación
         int centerX = x + width / 2;
         int centerY = y + height / 2;
 
-        // Rotar los puntos 90 grados a la derecha
         int[] rotatedXPoints = rotateXRight(xPoints, yPoints, centerX, centerY);
         int[] rotatedYPoints = rotateYRight(xPoints, yPoints, centerX, centerY);
 
-        // Crear el polígono con las coordenadas rotadas
         Polygon nave = new Polygon(rotatedXPoints, rotatedYPoints, xPoints.length);
         g.setColor(Color.GREEN);
         g.fillPolygon(nave);
@@ -51,8 +51,8 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
 
     @Override
     public void move(int dx, int dy) {
-        int pixelsToMoveX = dx * speedFactor; // Ajusta el movimiento horizontal según el factor de velocidad
-        int pixelsToMoveY = dy * speedFactor; // Ajusta el movimiento vertical según el factor de velocidad
+        int pixelsToMoveX = dx * speedFactor;
+        int pixelsToMoveY = dy * speedFactor;
         this.x += pixelsToMoveX;
         this.y += pixelsToMoveY;
     }
@@ -108,7 +108,6 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
         return height;
     }
 
-    // Métodos para rotar puntos (ya existentes)
     private int[] rotateXRight(int[] xPoints, int[] yPoints, int centerX, int centerY) {
         int[] rotatedX = new int[xPoints.length];
         for (int i = 0; i < xPoints.length; i++) {
@@ -133,6 +132,18 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
         this.y = y;
     }
 
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
     public void setWidth(int width) {
         this.width = width;
     }
@@ -152,6 +163,7 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
     public void setSpeedFactor(int speedFactor) {
         this.speedFactor = speedFactor;
     }
+
     public void increaseShotsReceived() {
         this.shotsReceived++;
     }
@@ -160,7 +172,18 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
         return shotsReceived;
     }
 
+    public int getCurrentHealth() {
+        return health; // Devuelve la salud actual del enemigo
+    }
+
     public void setShotsReceived(int shotsReceived) {
         this.shotsReceived = shotsReceived;
+    }
+
+    public void decreaseHealth(int amount) {
+        health -= amount;
+        if (health <= 0) {
+            die();
+        }
     }
 }

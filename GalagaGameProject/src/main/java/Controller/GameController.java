@@ -169,6 +169,28 @@ public class GameController {
 			g.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
 			g.drawString("Your Health: " + hero.getCurrentHealth(), 300, 350);
 		}
+
+		// Dibuja la barra de vida del super enemigo en el nivel 3
+		if (level == 3) {
+			for (IDrawable drawable : drawables) {
+				if (drawable instanceof Enemy) {
+					Enemy enemy = (Enemy) drawable;
+					if (enemy.getMaxHealth() == 100) { // Si es el super enemigo
+						int barWidth1 = 100;
+						int barHeight1 = 10;
+						int barX1 = enemy.getX();
+						int barY1 = enemy.getY() - 25; // Ajusta la posición de la barra de vida
+						double healthPercentage1 = (double) enemy.getCurrentHealth() / enemy.getMaxHealth();
+
+						g.setColor(Color.BLACK);
+						g.drawRect(barX1, barY1, barWidth1, barHeight1);
+
+						g.setColor(Color.RED);
+						g.fillRect(barX1, barY1, (int) (barWidth1 * healthPercentage1), barHeight1);
+					}
+				}
+			}
+		}
 	}
 
 	private void handleDeadElements() {
@@ -238,43 +260,54 @@ public class GameController {
 						IDrawable drawable = drawableIterator.next();
 						if (drawable instanceof Enemy) {
 							Enemy enemy = (Enemy) drawable;
-							Rectangle bulletRect = new Rectangle(bullet.getX(), bullet.getY(), bullet.getWidth(),
-									bullet.getHeight());
-							Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(),
-									enemy.getHeight());
+							Rectangle bulletRect = new Rectangle(bullet.getX(), bullet.getY(), bullet.getWidth(), bullet.getHeight());
+							Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
 							if (bulletRect.intersects(enemyRect)) {
 								bulletIterator.remove();
-								enemy.increaseShotsReceived();
-								if ((level == 1 && enemy.getShotsReceived() >= 1) ||
-										(level == 2 && enemy.getShotsReceived() >= 3)||
-										(level == 3 && enemy.getShotsReceived() >= 20)) {
-									enemy.die();
-									if (level == 1) {
-										hero.increaseScore(enemy.getScore());
-									} else if (level == 2) {
-										hero.increaseScore(enemy.getScore());
-									}else if(level==3){
-										hero.increaseScore(enemy.getScore());
+								if (level == 3 && enemy.getMaxHealth() == 100) { // Super enemigo del nivel 3
+									if (hero.getCurrentHealth() < 50) {
+										enemy.decreaseHealth(5);
+									} else if (hero.getCurrentHealth() >= 50 && hero.getCurrentHealth() <= 75) {
+										enemy.decreaseHealth(10);
+									} else {
+										enemy.decreaseHealth(15);
 									}
-									drawableIterator.remove();
-									addDieable(enemy);
+									if (enemy.isDead()) {
+										hero.increaseScore(enemy.getScore());
+										drawableIterator.remove();
+										addDieable(enemy);
+									}
+								} else {
+									enemy.increaseShotsReceived();
+									if ((level == 1 && enemy.getShotsReceived() >= 1) || (level == 2 && enemy.getShotsReceived() >= 2)
+											|| (level == 3 && enemy.getShotsReceived() >= 20)) {
+										enemy.die();
+										if (level == 1) {
+											hero.increaseScore(enemy.getScore());
+										} else if (level == 2) {
+											hero.increaseScore(enemy.getScore());
+										} else if (level == 3) {
+											hero.increaseScore(enemy.getScore());
+										}
+										drawableIterator.remove();
+										addDieable(enemy);
+									}
 								}
 								break;
 							}
 						}
 					}
 				} else {
-					Rectangle bulletRect = new Rectangle(bullet.getX(), bullet.getY(), bullet.getWidth(),
-							bullet.getHeight());
+					Rectangle bulletRect = new Rectangle(bullet.getX(), bullet.getY(), bullet.getWidth(), bullet.getHeight());
 					Rectangle heroRect = new Rectangle(hero.getX(), hero.getY(), hero.getWidth(), hero.getHeight());
 					if (bulletRect.intersects(heroRect)) {
 						bulletIterator.remove();
 						if (level == 1) {
-							lifeHero.decreaseHealth(5);
+							lifeHero.decreaseHealth(5); // Reduce la vida en 5 en nivel 1
 						} else if (level == 2) {
-							lifeHero.decreaseHealth(10);
-						}else if(level==3){
-							lifeHero.decreaseHealth(15);
+							lifeHero.decreaseHealth(10); // Reduce la vida en 10 en nivel 2
+						} else if (level == 3) {
+							lifeHero.decreaseHealth(15); // Reduce la vida en 15 en nivel 3
 						}
 						if (lifeHero.getCurrentHealth() <= 0) {
 							gameOver = true;
