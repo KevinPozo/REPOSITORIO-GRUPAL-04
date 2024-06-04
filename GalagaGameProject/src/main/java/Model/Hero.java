@@ -60,6 +60,7 @@ public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsernam
 
         g.drawString("Score: " + getScore(), 10, 40);
 
+
         int barWidth = 100;
         int barHeight = 10;
         int barX = 10;

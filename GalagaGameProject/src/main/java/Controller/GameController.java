@@ -87,6 +87,8 @@ public class GameController {
 			addMovable(enemy);
 		}
 	}
+
+
 	public void addDrawable(IDrawable drawable) {
 		drawables.add(drawable);
 	}
@@ -168,9 +170,10 @@ public class GameController {
 
 			g.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
 			g.drawString("Your Health: " + hero.getCurrentHealth(), 300, 350);
-		}
 
-		// Dibuja la barra de vida del super enemigo en el nivel 3
+			g.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+		}   g.drawString("Your Score: " + hero.getScore(), 300, 400);
+
 		if (level == 3) {
 			for (IDrawable drawable : drawables) {
 				if (drawable instanceof Enemy) {
@@ -179,7 +182,7 @@ public class GameController {
 						int barWidth1 = 100;
 						int barHeight1 = 10;
 						int barX1 = enemy.getX();
-						int barY1 = enemy.getY() - 25; // Ajusta la posición de la barra de vida
+						int barY1 = enemy.getY() -50;// Ajusta la posición de la barra de vida
 						double healthPercentage1 = (double) enemy.getCurrentHealth() / enemy.getMaxHealth();
 
 						g.setColor(Color.BLACK);
@@ -205,7 +208,8 @@ public class GameController {
 			}
 			deadIterator.remove();
 		}
-		if (drawables.stream().noneMatch(d -> d instanceof Enemy)) {
+		if (!gameOver && drawables.stream().noneMatch(d -> d instanceof Enemy)) {
+
 			levelUp();
 		}
 	}
@@ -270,7 +274,7 @@ public class GameController {
 									} else if (hero.getCurrentHealth() >= 50 && hero.getCurrentHealth() <= 75) {
 										enemy.decreaseHealth(10);
 									} else {
-										enemy.decreaseHealth(15);
+										enemy.decreaseHealth(100/hero.getCurrentHealth());
 									}
 									if (enemy.isDead()) {
 										hero.increaseScore(enemy.getScore());
@@ -280,7 +284,7 @@ public class GameController {
 								} else {
 									enemy.increaseShotsReceived();
 									if ((level == 1 && enemy.getShotsReceived() >= 1) || (level == 2 && enemy.getShotsReceived() >= 2)
-											|| (level == 3 && enemy.getShotsReceived() >= 20)) {
+											/*|| (level == 3 && enemy.getShotsReceived() >= 20)*/) {
 										enemy.die();
 										if (level == 1) {
 											hero.increaseScore(enemy.getScore());
