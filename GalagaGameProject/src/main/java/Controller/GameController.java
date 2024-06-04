@@ -63,22 +63,26 @@ public class GameController {
 		int startY = 50;
 		int gapX = 100;
 		int enemySpeedFactor = 1;
-		int numEnemies = 0;
-		int enemyScore = 0;
-		if(level==1){
-		numEnemies = 5;
-		enemyScore = 5;
-		}else if (level == 2) {
-			numEnemies = 10;
-			enemyScore = 10;
-		}else if(level==3){
-			numEnemies = 1;
-			enemyScore = 15;
-			enemyWidth *=2.5;
-			enemyHeight *=2.5;
-			startX = 200;
-		} else if (level>=4) {
-
+		int numEnemies;
+		int enemyScore;
+		switch (level) {
+			case 1:
+				numEnemies = 5;
+				enemyScore = 5;
+				break;
+			case 2:
+				numEnemies = 10;
+				enemyScore = 10;
+				break;
+			case 3:
+				numEnemies = 1;
+				enemyScore = 15;
+				enemyWidth *= 2.5;
+				enemyHeight *= 2.5;
+				startX = 400;
+				break;
+			default:
+				return;
 		}
 		for (int i = 0; i < numEnemies; i++) {
 			Enemy enemy = new Enemy(startX + (i % 5) * gapX, startY + (i / 5) * gapX, enemyWidth, enemyHeight, enemyScore, this);
@@ -118,7 +122,7 @@ public class GameController {
 		checkEnemiesCrossedLine();
 		checkGameOver();
 		checkBulletCollision();
-		enemyShootTimer--;
+		enemyShootTimer-=2;
 		if (!gameOver && enemyShootTimer <= 0 && level == 1) {
 			enemyShoot();
 			enemyShootTimer = enemyShootCooldown;
@@ -165,9 +169,10 @@ public class GameController {
 			g.setColor(Color.RED);
 			g.setFont(new Font("Comic Sans MS", Font.BOLD, 36));
 			g.drawString("GAME OVER", 300, 300);
-
 			g.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
 			g.drawString("Your Health: " + hero.getCurrentHealth(), 300, 350);
+			g.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+			g.drawString("Your Score: " + hero.getScore(), 300, 400);
 		}
 
 		// Dibuja la barra de vida del super enemigo en el nivel 3
@@ -341,7 +346,7 @@ public class GameController {
 	private void checkGameOver() {
 		if (lifeHero.getCurrentHealth() <= 0) {
 			gameOver = true;
-		}else if(level>=4){
+		} else if (level >= 4) {
 			gameOver = true;
 		}
 	}
