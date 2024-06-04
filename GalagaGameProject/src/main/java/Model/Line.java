@@ -1,9 +1,11 @@
 /**
- * 
+ *
  * @author KevinPozo
- * Title: Inversión de Dependencia y Responsabilidad Única.
- * 
- * 
+ * @author BrayanLoya
+ * @author JordyChamba
+ * Title: Proyecto Galaga (Game).
+ *
+ *
  * */
 package Model;
 
@@ -21,7 +23,6 @@ public class Line implements IDrawable {
         this.x2 = x2;
         this.y2 = y2;
     }
-
     @Override
     public void draw(Graphics g) {
         g.setColor(Color.WHITE); 

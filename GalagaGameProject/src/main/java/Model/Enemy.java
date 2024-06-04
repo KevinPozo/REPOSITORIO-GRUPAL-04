@@ -67,10 +67,6 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
         return dead;
     }
 
-    public int getShotsReceived() {
-        return shotsReceived;
-    }
-
     @Override
     public int getScore() {
         return score;
@@ -153,23 +149,18 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
         this.score = score;
     }
 
-    public GameController getGameController() {
-        return gameController;
-    }
-
-    public void setGameController(GameController gameController) {
-        this.gameController = gameController;
-    }
-
-    public int getSpeedFactor() {
-        return speedFactor;
-    }
-
     public void setSpeedFactor(int speedFactor) {
         this.speedFactor = speedFactor;
     }
-
     public void increaseShotsReceived() {
         this.shotsReceived++;
+    }
+
+    public int getShotsReceived() {
+        return shotsReceived;
+    }
+
+    public void setShotsReceived(int shotsReceived) {
+        this.shotsReceived = shotsReceived;
     }
 }

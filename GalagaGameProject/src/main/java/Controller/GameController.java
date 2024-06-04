@@ -1,3 +1,12 @@
+/**
+ *
+ * @author KevinPozo
+ * @author BrayanLoya
+ * @author JordyChamba
+ * Title: Proyecto Galaga (Game).
+ *
+ *
+ * */
 package Controller;
 
 import java.awt.Color;
@@ -8,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-
 import Model.Enemy;
 import Model.Hero;
 import Model.Interfaces.IDieable;
@@ -17,7 +25,6 @@ import Model.Interfaces.ILife;
 import Model.Interfaces.IMovable;
 import Model.Bullet;
 import Model.Line;
-
 public class GameController {
 	private static final int HEIGHT = 600;
 	private static final int WIDTH = 800;
@@ -29,7 +36,6 @@ public class GameController {
 	private Random random;
 	private int enemyShootCooldown = 75;
 	private int enemyShootTimer = enemyShootCooldown;
-
 	private static final int PLAYER_TOP_LIMIT = 2 * HEIGHT / 3 + 21;
 	private static final int LINE_Y_POSITION = 2 * HEIGHT / 3;
 	private boolean gameOver = false;
@@ -43,7 +49,6 @@ public class GameController {
 		deadElements = new ArrayList<>();
 		random = new Random();
 		level = 1;
-
 		hero = new Hero(400, 450, 50, 25, "Walker77", this);
 		addDrawable(hero);
 		addMovable(hero);
@@ -54,20 +59,27 @@ public class GameController {
 	private void createEnemies() {
 		int enemyWidth = 50;
 		int enemyHeight = 50;
-		int startX = 150;
+		int startX = 170;
 		int startY = 50;
 		int gapX = 100;
-
-		int numEnemies = (level == 1) ? 5 : 10;
-
 		int enemySpeedFactor = 1;
-		int enemyScore = (level == 1) ? 5 : 10;
+		int numEnemies = 0;
+		int enemyScore = 0;
+		if(level==1){
+		numEnemies = 5;
+		enemyScore = 5;
+		}else if (level == 2) {
+			numEnemies = 10;
+			enemyScore = 10;
+		}else if(level==3){
+			numEnemies = 1;
+			enemyScore = 15;
+			enemyWidth *=2.5;
+			enemyHeight *=2.5;
+			startX = 200;
+		} else if (level>=4) {
 
-		if (level == 2) {
-			startX = 170;
-			startY = 50;
 		}
-
 		for (int i = 0; i < numEnemies; i++) {
 			Enemy enemy = new Enemy(startX + (i % 5) * gapX, startY + (i / 5) * gapX, enemyWidth, enemyHeight, enemyScore, this);
 			enemy.setSpeedFactor(enemySpeedFactor);
@@ -75,29 +87,23 @@ public class GameController {
 			addMovable(enemy);
 		}
 	}
-
 	public void addDrawable(IDrawable drawable) {
 		drawables.add(drawable);
 	}
-
 	public void addMovable(IMovable movable) {
 		movables.add(movable);
 	}
-
 	public void addBullet(IDrawable bullet) {
 		bullets.add(bullet);
 	}
-
 	public void addShootable(IDrawable shootable) {
 		if (shootable instanceof Bullet) {
 			bullets.add(shootable);
 		}
 	}
-
 	public void addDieable(IDieable element) {
 		deadElements.add(element);
 	}
-
 	public void addLife(ILife life) {
 		this.lifeHero = life;
 		addDrawable((IDrawable) life);
@@ -108,26 +114,22 @@ public class GameController {
 			movable.move(0, 0);
 		}
 		moveEnemiesDown();
-
 		handleDeadElements();
-
 		checkEnemiesCrossedLine();
-
 		checkGameOver();
 		checkBulletCollision();
-
 		enemyShootTimer--;
-
 		if (!gameOver && enemyShootTimer <= 0 && level == 1) {
 			enemyShoot();
 			enemyShootTimer = enemyShootCooldown;
 		}else if(!gameOver && enemyShootTimer <= 0 && level == 2){
 			enemyShoot();
 			enemyShootTimer = enemyShootCooldown;
+		}else if(!gameOver && enemyShootTimer <= 0 && level == 3){
+			enemyShoot();
+			enemyShootTimer += enemyShootCooldown;
 		}
-
 	}
-
 	public void render(Graphics g) {
 		Line line = new Line(0, LINE_Y_POSITION, WIDTH, LINE_Y_POSITION);
 		line.draw(g);
@@ -158,8 +160,7 @@ public class GameController {
 		int textX = barX + (barWidth - textWidth) / 2;
 		int textY = barY + barHeight + 15;
 		g.drawString("Life: " + hero.getCurrentHealth(), textX, textY);
-		g.drawString("Level: " + level, WIDTH - 100, 20); // Display the current
-
+		g.drawString("Level: " + level, WIDTH - 100, 20);
 		if (gameOver) {
 			g.setColor(Color.RED);
 			g.setFont(new Font("Comic Sans MS", Font.BOLD, 36));
@@ -180,15 +181,12 @@ public class GameController {
 			if (deadElement instanceof IMovable) {
 				movables.remove(deadElement);
 			}
-
 			deadIterator.remove();
 		}
-
 		if (drawables.stream().noneMatch(d -> d instanceof Enemy)) {
 			levelUp();
 		}
 	}
-
 	private void moveEnemiesDown() {
 		for (IMovable movable : movables) {
 			if (movable instanceof Enemy) {
@@ -196,7 +194,6 @@ public class GameController {
 			}
 		}
 	}
-
 	private void enemyShoot() {
 		for (IMovable movable : movables) {
 			if (movable instanceof Enemy) {
@@ -204,7 +201,6 @@ public class GameController {
 			}
 		}
 	}
-
 	public void heroShoot() {
 		int heroX = hero.getX();
 		int heroY = hero.getY();
@@ -250,11 +246,14 @@ public class GameController {
 								bulletIterator.remove();
 								enemy.increaseShotsReceived();
 								if ((level == 1 && enemy.getShotsReceived() >= 1) ||
-										(level == 2 && enemy.getShotsReceived() >= 2)) {
+										(level == 2 && enemy.getShotsReceived() >= 3)||
+										(level == 3 && enemy.getShotsReceived() >= 20)) {
 									enemy.die();
 									if (level == 1) {
 										hero.increaseScore(enemy.getScore());
 									} else if (level == 2) {
+										hero.increaseScore(enemy.getScore());
+									}else if(level==3){
 										hero.increaseScore(enemy.getScore());
 									}
 									drawableIterator.remove();
@@ -271,9 +270,11 @@ public class GameController {
 					if (bulletRect.intersects(heroRect)) {
 						bulletIterator.remove();
 						if (level == 1) {
-							lifeHero.decreaseHealth(5); // Reduce la vida en 5 en nivel 1
+							lifeHero.decreaseHealth(5);
 						} else if (level == 2) {
-							lifeHero.decreaseHealth(10); // Reduce la vida en 10 en nivel 2
+							lifeHero.decreaseHealth(10);
+						}else if(level==3){
+							lifeHero.decreaseHealth(15);
 						}
 						if (lifeHero.getCurrentHealth() <= 0) {
 							gameOver = true;
@@ -304,13 +305,13 @@ public class GameController {
 			gameOver = true;
 		}
 	}
-
 	private void checkGameOver() {
 		if (lifeHero.getCurrentHealth() <= 0) {
 			gameOver = true;
+		}else if(level>=4){
+			gameOver = true;
 		}
 	}
-
 	private void levelUp() {
 		level++;
 		createEnemies();
