@@ -1,3 +1,12 @@
+/**
+ *
+ * @author KevinPozo
+ * @author BrayanLoya
+ * @author JordyChamba
+ * Title: Proyecto Galaga (Game).
+ *
+ *
+ * */
 package Model;
 
 import java.awt.*;
@@ -15,7 +24,7 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
     private boolean dead = false;
     private int score;
     private GameController gameController;
-    private int speedFactor; // Nuevo campo para el factor de velocidad
+    private int speedFactor;
     private int shotsReceived;
 
     public Enemy(int x, int y, int width, int height, int score, GameController gameController) {
@@ -31,19 +40,12 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
 
     @Override
     public void draw(Graphics g) {
-        // Coordenadas originales de los puntos de la figura
         int[] xPoints = {x, x + width, x + width, x, x + width / 2};
         int[] yPoints = {y, y, y + height, y + height, y + height / 2};
-
-        // Calcular el centro de la figura para la rotación
         int centerX = x + width / 2;
         int centerY = y + height / 2;
-
-        // Rotar los puntos 90 grados a la derecha
         int[] rotatedXPoints = rotateXRight(xPoints, yPoints, centerX, centerY);
         int[] rotatedYPoints = rotateYRight(xPoints, yPoints, centerX, centerY);
-
-        // Crear el polígono con las coordenadas rotadas
         Polygon nave = new Polygon(rotatedXPoints, rotatedYPoints, xPoints.length);
         g.setColor(Color.GREEN);
         g.fillPolygon(nave);
@@ -51,8 +53,8 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
 
     @Override
     public void move(int dx, int dy) {
-        int pixelsToMoveX = dx * speedFactor; // Ajusta el movimiento horizontal según el factor de velocidad
-        int pixelsToMoveY = dy * speedFactor; // Ajusta el movimiento vertical según el factor de velocidad
+        int pixelsToMoveX = dx * speedFactor;
+        int pixelsToMoveY = dy * speedFactor;
         this.x += pixelsToMoveX;
         this.y += pixelsToMoveY;
     }
@@ -87,7 +89,6 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
         int bulletWidth = 5;
         int bulletHeight = 10;
         int bulletSpeed = 10;
-
         Bullet bullet = new Bullet(bulletX, bulletY, bulletWidth, bulletHeight, bulletSpeed, true);
         gameController.addBullet(bullet);
     }
@@ -107,8 +108,6 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
     public int getHeight() {
         return height;
     }
-
-    // Métodos para rotar puntos (ya existentes)
     private int[] rotateXRight(int[] xPoints, int[] yPoints, int centerX, int centerY) {
         int[] rotatedX = new int[xPoints.length];
         for (int i = 0; i < xPoints.length; i++) {
@@ -116,7 +115,6 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
         }
         return rotatedX;
     }
-
     private int[] rotateYRight(int[] xPoints, int[] yPoints, int centerX, int centerY) {
         int[] rotatedY = new int[yPoints.length];
         for (int i = 0; i < yPoints.length; i++) {
@@ -124,43 +122,13 @@ public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable 
         }
         return rotatedY;
     }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public void setDead(boolean dead) {
-        this.dead = dead;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     public void setSpeedFactor(int speedFactor) {
         this.speedFactor = speedFactor;
     }
     public void increaseShotsReceived() {
         this.shotsReceived++;
     }
-
     public int getShotsReceived() {
         return shotsReceived;
-    }
-
-    public void setShotsReceived(int shotsReceived) {
-        this.shotsReceived = shotsReceived;
     }
 }

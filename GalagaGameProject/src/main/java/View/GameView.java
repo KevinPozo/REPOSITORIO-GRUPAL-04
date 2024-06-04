@@ -1,9 +1,11 @@
 /**
- * 
+ *
  * @author KevinPozo
- * Title: Inversión de Dependencia y Responsabilidad Única.
- * 
- * 
+ * @author BrayanLoya
+ * @author JordyChamba
+ * Title: Proyecto Galaga (Game).
+ *
+ *
  * */
 package View;
 
@@ -25,13 +27,11 @@ public class GameView extends JFrame implements KeyListener {
     private GameController gameController;
     private Timer gameTimer;
     private int delay = 1000 / 60; 
-    private int speed = 5; 
-
+    private int speed = 6;
     public GameView() {
-        setTitle("Galaga Game KevinPozo");
+        setTitle("Galaga Game Group 4");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-
         gamePanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -42,15 +42,11 @@ public class GameView extends JFrame implements KeyListener {
         };
         gamePanel.setPreferredSize(new Dimension(800, 600));
         add(gamePanel);
-
         gameController = new GameController();
-
         addKeyListener(this);
-
         gamePanel.setFocusable(true);
         gamePanel.requestFocus();
         gamePanel.addKeyListener(this);
-
         gameTimer = new Timer(delay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -63,7 +59,6 @@ public class GameView extends JFrame implements KeyListener {
         setVisible(true);
         gameTimer.start();
     }
-
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
@@ -87,19 +82,14 @@ public class GameView extends JFrame implements KeyListener {
             default:
                 break;
         }
-
         gameController.moveHero(dx, dy,2);
     }
-
-
     @Override
     public void keyReleased(KeyEvent e) {
     }
-
     @Override
     public void keyTyped(KeyEvent e) {
     }
-
     public static void main(String[] args) {
         new GameView();
     }
