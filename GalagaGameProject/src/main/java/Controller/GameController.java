@@ -167,7 +167,10 @@ public class GameController {
 			g.drawString("GAME OVER", 300, 300);
 
 			g.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
-			g.drawString("Your Health: " + hero.getCurrentHealth(), 300, 350);
+			g.drawString("Your Health: " + hero.getCurrentHealth(), 300, 340);
+
+			g.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+			g.drawString("Your Score: " + hero.getScore(), 300, 375);
 		}
 
 		// Dibuja la barra de vida del super enemigo en el nivel 3
@@ -205,7 +208,7 @@ public class GameController {
 			}
 			deadIterator.remove();
 		}
-		if (drawables.stream().noneMatch(d -> d instanceof Enemy)) {
+		if (!gameOver && drawables.stream().noneMatch(d -> d instanceof Enemy)) {
 			levelUp();
 		}
 	}
