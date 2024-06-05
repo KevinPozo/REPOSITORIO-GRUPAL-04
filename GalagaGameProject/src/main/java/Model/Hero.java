@@ -189,5 +189,4 @@ public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsernam
             return 15;
         }
     }
-
 }

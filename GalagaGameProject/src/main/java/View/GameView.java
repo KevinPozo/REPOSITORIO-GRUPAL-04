@@ -78,11 +78,11 @@ public class GameView extends JFrame implements KeyListener {
         g.drawString(startText, centerX - startTextWidth / 2, centerY + 50);
     }
 
-
     @Override
+
     public void keyPressed(KeyEvent e) {
         if (!gameStarted) {
-            gameStarted = true; // Comenzar el juego al presionar cualquier tecla
+            gameStarted = true;
         } else {
             int keyCode = e.getKeyCode();
             int dx = 0, dy = 0;
@@ -102,8 +102,8 @@ public class GameView extends JFrame implements KeyListener {
                 case KeyEvent.VK_H:
                     gameController.heroShoot();
                     break;
-                case KeyEvent.VK_P: // Agregar case para la tecla "P" (pausa)
-                    gameController.togglePause(); // Llamar al método de pausa/despausa
+                case KeyEvent.VK_P:
+                    gameController.togglePause();
                     break;
                 default:
                     break;
@@ -113,10 +113,12 @@ public class GameView extends JFrame implements KeyListener {
     }
 
     @Override
+
     public void keyReleased(KeyEvent e) {
     }
 
     @Override
+
     public void keyTyped(KeyEvent e) {
     }
 
