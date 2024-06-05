@@ -1,21 +1,10 @@
-/**
- *
- * @author KevinPozo
- * @author BrayanLoya
- * @author JordyChamba
- * Title: Proyecto Galaga (Game).
- *
- *
- * */
 package View;
 
 import Controller.GameController;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -26,8 +15,10 @@ public class GameView extends JFrame implements KeyListener {
     private JPanel gamePanel;
     private GameController gameController;
     private Timer gameTimer;
-    private int delay = 1000 / 60; 
+    private int delay = 1000 / 60;
     private int speed = 6;
+    private boolean gameStarted = false; // Bandera para controlar si el juego ha comenzado
+
     public GameView() {
         setTitle("Galaga Game Group 4");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,7 +28,11 @@ public class GameView extends JFrame implements KeyListener {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 setBackground(Color.BLACK);
-                gameController.render(g);
+                if (gameStarted) {
+                    gameController.render(g);
+                } else {
+                    showStartScreen(g);
+                }
             }
         };
         gamePanel.setPreferredSize(new Dimension(800, 600));
@@ -50,8 +45,10 @@ public class GameView extends JFrame implements KeyListener {
         gameTimer = new Timer(delay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameController.update();
-                gamePanel.repaint();
+                if (gameStarted) {
+                    gameController.update();
+                    gamePanel.repaint();
+                }
             }
         });
         pack();
@@ -59,37 +56,70 @@ public class GameView extends JFrame implements KeyListener {
         setVisible(true);
         gameTimer.start();
     }
+
+    private void showStartScreen(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        g.setColor(Color.RED);
+        Font font = new Font("Comic Sans MS", Font.BOLD, 24);
+        g.setFont(font);
+
+        String welcomeText = "Welcome to Galaga!";
+        String startText = "Press any key to start";
+
+        int welcomeTextWidth = g.getFontMetrics(font).stringWidth(welcomeText);
+        int startTextWidth = g.getFontMetrics(font).stringWidth(startText);
+
+        int centerX = getWidth() / 2;
+        int centerY = getHeight() / 2;
+
+        g.drawString(welcomeText, centerX - welcomeTextWidth / 2, centerY - 50);
+        g.drawString(startText, centerX - startTextWidth / 2, centerY + 50);
+    }
+
+
     @Override
     public void keyPressed(KeyEvent e) {
-        int keyCode = e.getKeyCode();
-        int dx = 0, dy = 0;
-        switch(keyCode) {
-            case KeyEvent.VK_W: 
-                dy = -speed;
-                break;
-            case KeyEvent.VK_A: 
-                dx = -speed;
-                break;
-            case KeyEvent.VK_S: 
-                dy = speed;
-                break;
-            case KeyEvent.VK_D: 
-                dx = speed;
-                break;
-            case KeyEvent.VK_H:
-                gameController.heroShoot();
-                break;
-            default:
-                break;
+        if (!gameStarted) {
+            gameStarted = true; // Comenzar el juego al presionar cualquier tecla
+        } else {
+            int keyCode = e.getKeyCode();
+            int dx = 0, dy = 0;
+            switch(keyCode) {
+                case KeyEvent.VK_W:
+                    dy = -speed;
+                    break;
+                case KeyEvent.VK_A:
+                    dx = -speed;
+                    break;
+                case KeyEvent.VK_S:
+                    dy = speed;
+                    break;
+                case KeyEvent.VK_D:
+                    dx = speed;
+                    break;
+                case KeyEvent.VK_H:
+                    gameController.heroShoot();
+                    break;
+                case KeyEvent.VK_P: // Agregar case para la tecla "P" (pausa)
+                    gameController.togglePause(); // Llamar al método de pausa/despausa
+                    break;
+                default:
+                    break;
+            }
+            gameController.moveHero(dx, dy,2);
         }
-        gameController.moveHero(dx, dy,2);
     }
+
     @Override
     public void keyReleased(KeyEvent e) {
     }
+
     @Override
     public void keyTyped(KeyEvent e) {
     }
+
     public static void main(String[] args) {
         new GameView();
     }

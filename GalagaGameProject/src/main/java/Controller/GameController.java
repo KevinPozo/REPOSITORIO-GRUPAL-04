@@ -41,6 +41,8 @@ public class GameController {
 	private boolean gameOver = false;
 	private Hero hero;
 	private ILife lifeHero;
+	private boolean paused = false;
+	private String pauseMessage = "Press 'P' to pause/unpause";
 
 	public GameController() {
 		drawables = new ArrayList<>();
@@ -110,24 +112,26 @@ public class GameController {
 		addMovable((IMovable) life);
 	}
 	public void update() {
-		for (IMovable movable : movables) {
-			movable.move(0, 0);
-		}
-		moveEnemiesDown();
-		handleDeadElements();
-		checkEnemiesCrossedLine();
-		checkGameOver();
-		checkBulletCollision();
-		enemyShootTimer--;
-		if (!gameOver && enemyShootTimer <= 0 && level == 1) {
-			enemyShoot();
-			enemyShootTimer = enemyShootCooldown;
-		}else if(!gameOver && enemyShootTimer <= 0 && level == 2){
-			enemyShoot();
-			enemyShootTimer = enemyShootCooldown;
-		}else if(!gameOver && enemyShootTimer <= 0 && level == 3){
-			enemyShoot();
-			enemyShootTimer += enemyShootCooldown;
+		if (!paused) {
+			for (IMovable movable : movables) {
+				movable.move(0, 0);
+			}
+			moveEnemiesDown();
+			handleDeadElements();
+			checkEnemiesCrossedLine();
+			checkGameOver();
+			checkBulletCollision();
+			enemyShootTimer--;
+			if (!gameOver && enemyShootTimer <= 0 && level == 1) {
+				enemyShoot();
+				enemyShootTimer = enemyShootCooldown;
+			} else if (!gameOver && enemyShootTimer <= 0 && level == 2) {
+				enemyShoot();
+				enemyShootTimer = enemyShootCooldown;
+			} else if (!gameOver && enemyShootTimer <= 0 && level == 3) {
+				enemyShoot();
+				enemyShootTimer += enemyShootCooldown;
+			}
 		}
 	}
 	public void render(Graphics g) {
@@ -194,8 +198,20 @@ public class GameController {
 				}
 			}
 		}
+
+		if (paused) {
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("Arial", Font.BOLD, 24));
+			g.drawString("PAUSED", 350, 300);
+
+			g.setFont(new Font("Arial", Font.PLAIN, 16));
+			g.drawString(pauseMessage, 310, 330);
+		}
 	}
 
+	public void togglePause() {
+		paused = !paused;
+	}
 	private void handleDeadElements() {
 		Iterator<IDieable> deadIterator = deadElements.iterator();
 		while (deadIterator.hasNext()) {
