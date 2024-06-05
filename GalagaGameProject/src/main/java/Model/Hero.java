@@ -161,25 +161,6 @@ public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsernam
             currentHealth = 0;
         }
     }
-
-    @Override
-    public void increaseHealth(int amount) {
-        currentHealth += amount;
-        if (currentHealth > maxHealth) {
-            currentHealth = maxHealth;
-        }
-    }
-
-    @Override
-    public void setMaxHealth(int maxHealth) {
-        this.maxHealth = maxHealth;
-    }
-
-    @Override
-    public void setCurrentHealth(int currentHealth) {
-        this.currentHealth = currentHealth;
-    }
-
     public int getDamageToEnemy() {
         if (currentHealth < 50) {
             return 5;

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+
 import Model.Enemy;
 import Model.Hero;
 import Model.Interfaces.IDieable;
@@ -25,6 +26,7 @@ import Model.Interfaces.ILife;
 import Model.Interfaces.IMovable;
 import Model.Bullet;
 import Model.Line;
+
 public class GameController {
 	private static final int HEIGHT = 600;
 	private static final int WIDTH = 800;
@@ -51,7 +53,7 @@ public class GameController {
 		deadElements = new ArrayList<>();
 		random = new Random();
 		level = 1;
-		hero = new Hero(400, 450, 50, 25, "Walker77", this);
+		hero = new Hero(400, 450, 50, 25, null, this);
 		addDrawable(hero);
 		addMovable(hero);
 		createEnemies();
@@ -125,24 +127,20 @@ public class GameController {
 	public void update() {
 		if (!paused) {
 			moveEnemies();
-			for (IMovable movable : movables) {
-				movable.move(0, 0);
-			}
+			movables.forEach(movable -> movable.move(0, 0));
 			moveEnemiesDown();
 			handleDeadElements();
 			checkEnemiesCrossedLine();
 			checkGameOver();
 			checkBulletCollision();
 			enemyShootTimer--;
-			if (!gameOver && enemyShootTimer <= 0 && level == 1) {
+			if (!gameOver && enemyShootTimer <= 0 && level <= 3) {
 				enemyShoot();
-				enemyShootTimer = enemyShootCooldown;
-			} else if (!gameOver && enemyShootTimer <= 0 && level == 2) {
-				enemyShoot();
-				enemyShootTimer = enemyShootCooldown;
-			} else if (!gameOver && enemyShootTimer <= 0 && level == 3) {
-				enemyShoot();
-				enemyShootTimer += enemyShootCooldown;
+				if (level == 3) {
+					enemyShootTimer += enemyShootCooldown;
+				} else {
+					enemyShootTimer = enemyShootCooldown;
+				}
 			}
 		}
 	}
@@ -151,13 +149,8 @@ public class GameController {
 		Line line = new Line(0, LINE_Y_POSITION, WIDTH, LINE_Y_POSITION);
 		line.draw(g);
 
-		for (IDrawable drawable : drawables) {
-			drawable.draw(g);
-		}
-
-		for (IDrawable bullet : bullets) {
-			bullet.draw(g);
-		}
+		drawables.forEach(drawable -> drawable.draw(g));
+		bullets.forEach(bullet -> bullet.draw(g));
 
 		int barWidth = 100;
 		int barHeight = 10;
@@ -177,7 +170,9 @@ public class GameController {
 		int textX = barX + (barWidth - textWidth) / 2;
 		int textY = barY + barHeight + 15;
 		g.drawString("Life: " + hero.getCurrentHealth(), textX, textY);
-		g.drawString("Level: " + level, WIDTH - 100, 20);
+		g.setFont(new Font("Comic Sans MS", Font.PLAIN, 24));
+		g.drawString("Level: " + level, WIDTH - 100, 40);
+
 		if (gameOver) {
 			g.setColor(Color.RED);
 			g.setFont(new Font("Comic Sans MS", Font.BOLD, 36));
@@ -191,10 +186,11 @@ public class GameController {
 		}
 
 		if (level == 3) {
-			for (IDrawable drawable : drawables) {
-				if (drawable instanceof Enemy) {
-					Enemy enemy = (Enemy) drawable;
-					if (enemy.getMaxHealth() == 100) {
+			drawables.stream()
+					.filter(drawable -> drawable instanceof Enemy)
+					.map(drawable -> (Enemy) drawable)
+					.filter(enemy -> enemy.getMaxHealth() == 100)
+					.forEach(enemy -> {
 						int barWidth1 = 100;
 						int barHeight1 = 10;
 						int barX1 = enemy.getX();
@@ -206,9 +202,7 @@ public class GameController {
 
 						g.setColor(Color.RED);
 						g.fillRect(barX1, barY1, (int) (barWidth1 * healthPercentage1), barHeight1);
-					}
-				}
-			}
+					});
 		}
 
 		if (paused) {
@@ -270,33 +264,24 @@ public class GameController {
 			}
 		}
 
-		boolean changeDirection = false;
-		for (IMovable movable : movables) {
-			if (movable instanceof Enemy) {
-				Enemy enemy = (Enemy) movable;
-				if (enemy.getX() <= 0 || enemy.getX() + enemy.getWidth() >= WIDTH) {
-					changeDirection = true;
-					break;
-				}
-			}
-		}
+		boolean changeDirection = movables.stream()
+				.filter(movable -> movable instanceof Enemy)
+				.map(movable -> (Enemy) movable)
+				.anyMatch(enemy -> enemy.getX() <= 0 || enemy.getX() + enemy.getWidth() >= WIDTH);
 
 		if (changeDirection) {
-			for (IMovable movable : movables) {
-				if (movable instanceof Enemy) {
-					Enemy enemy = (Enemy) movable;
-					enemy.move(0, 10);
-				}
-			}
+			movables.stream()
+					.filter(movable -> movable instanceof Enemy)
+					.map(movable -> (Enemy) movable)
+					.forEach(enemy -> enemy.move(1, 1));
 		}
 	}
 
 	private void enemyShoot() {
-		for (IMovable movable : movables) {
-			if (movable instanceof Enemy) {
-				((Enemy) movable).shoot();
-			}
-		}
+		movables.stream()
+				.filter(movable -> movable instanceof Enemy)
+				.map(movable -> (Enemy) movable)
+				.forEach(Enemy::shoot);
 	}
 
 	public void heroShoot() {
@@ -343,13 +328,8 @@ public class GameController {
 							if (bulletRect.intersects(enemyRect)) {
 								bulletIterator.remove();
 								if (level == 3 && enemy.getMaxHealth() == 100) {
-									if (hero.getCurrentHealth() < 50) {
-										enemy.decreaseHealth(5);
-									} else if (hero.getCurrentHealth() >= 50 && hero.getCurrentHealth() <= 75) {
-										enemy.decreaseHealth(10);
-									} else {
-										enemy.decreaseHealth(15);
-									}
+									int damage = hero.getCurrentHealth() < 50 ? 5 : hero.getCurrentHealth() >= 50 && hero.getCurrentHealth() <= 75 ? 10 : 15;
+									enemy.decreaseHealth(damage);
 									if (enemy.isDead()) {
 										hero.increaseScore(enemy.getScore());
 										drawableIterator.remove();
@@ -357,16 +337,10 @@ public class GameController {
 									}
 								} else {
 									enemy.increaseShotsReceived();
-									if ((level == 1 && enemy.getShotsReceived() >= 1) || (level == 2 && enemy.getShotsReceived() >= 3)
-											|| (level == 3 && enemy.getShotsReceived() >= 20)) {
+									int shotsLimit = level == 1 ? 1 : level == 2 ? 3 : 20;
+									if (enemy.getShotsReceived() >= shotsLimit) {
 										enemy.die();
-										if (level == 1) {
-											hero.increaseScore(enemy.getScore());
-										} else if (level == 2) {
-											hero.increaseScore(enemy.getScore());
-										} else if (level == 3) {
-											hero.increaseScore(enemy.getScore());
-										}
+										hero.increaseScore(enemy.getScore());
 										drawableIterator.remove();
 										addDieable(enemy);
 									}
@@ -380,13 +354,8 @@ public class GameController {
 					Rectangle heroRect = new Rectangle(hero.getX(), hero.getY(), hero.getWidth(), hero.getHeight());
 					if (bulletRect.intersects(heroRect)) {
 						bulletIterator.remove();
-						if (level == 1) {
-							lifeHero.decreaseHealth(5);
-						} else if (level == 2) {
-							lifeHero.decreaseHealth(10);
-						} else if (level == 3) {
-							lifeHero.decreaseHealth(15);
-						}
+						int damage = level == 1 ? 5 : level == 2 ? 10 : 15;
+						lifeHero.decreaseHealth(damage);
 						if (lifeHero.getCurrentHealth() <= 0) {
 							gameOver = true;
 						}
@@ -419,9 +388,7 @@ public class GameController {
 	}
 
 	private void checkGameOver() {
-		if (lifeHero.getCurrentHealth() <= 0) {
-			gameOver = true;
-		}else if(level>=4){
+		if (lifeHero.getCurrentHealth() <= 0 || level >= 4) {
 			gameOver = true;
 		}
 	}
@@ -430,4 +397,8 @@ public class GameController {
 		level++;
 		createEnemies();
 	}
+	public void setUserName(String name){
+		hero.setUsername(name);
+	}
 }
+
