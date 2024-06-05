@@ -33,11 +33,14 @@ public class GameController {
     private List<IDieable> deadElements;
     private int level;
     private Random random;
-    private int enemyShootCooldown = 75;
+    private int enemyShootCooldown = 65;
     private int enemyShootTimer = enemyShootCooldown;
     private static final int PLAYER_TOP_LIMIT = 2 * HEIGHT / 3 + 21;
     private static final int LINE_Y_POSITION = 2 * HEIGHT / 3;
     private boolean gameOver = false;
+    private int rapidFireCounter = 0;
+    private int rapidFireDelay = 3;
+    private int rapidFireDelayCounter = 0;
     private Hero hero;
     private ILife lifeHero;
     private boolean paused = false;
@@ -121,8 +124,9 @@ public class GameController {
         addMovable((IMovable) life);
     }
 
-    public void update() {
 
+
+    public void update() {
         if (!paused) {
             moveEnemies();
             movables.forEach(movable -> movable.move(0, 0));
@@ -132,17 +136,30 @@ public class GameController {
             checkGameOver();
             checkBulletCollision();
             enemyShootTimer--;
+
             if (!gameOver && enemyShootTimer <= 0 && level <= 3) {
-                enemyShoot();
                 if (level == 3) {
-                    enemyShootTimer += enemyShootCooldown;
+                    if (rapidFireCounter < 3) {
+                        if (rapidFireDelayCounter >= rapidFireDelay) {
+                            enemyShoot();
+                            rapidFireCounter++;
+                            rapidFireDelayCounter = 0;
+                        } else {
+                            rapidFireDelayCounter++;
+                        }
+                    } else {
+                        rapidFireCounter = 0;
+                        enemyShootTimer += enemyShootCooldown;
+                    }
                 } else {
+                    enemyShoot();
                     enemyShootTimer = enemyShootCooldown;
                 }
             }
         }
-
     }
+
+
 
     public void render(Graphics g) {
         Line line = new Line(0, LINE_Y_POSITION, WIDTH, LINE_Y_POSITION);
@@ -217,6 +234,7 @@ public class GameController {
     public void togglePause() {
         paused = !paused;
     }
+
     private void handleDeadElements() {
         Iterator<IDieable> deadIterator = deadElements.iterator();
         while (deadIterator.hasNext()) {
