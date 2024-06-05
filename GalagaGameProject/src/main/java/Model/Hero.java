@@ -1,12 +1,9 @@
 /**
- *
  * @author KevinPozo
  * @author BrayanLoya
  * @author JordyChamba
  * Title: Proyecto Galaga (Game).
- *
- *
- * */
+ */
 package Model;
 
 import java.awt.Color;
@@ -23,7 +20,7 @@ import Model.Interfaces.IScore;
 import Model.Interfaces.IShootable;
 import Model.Interfaces.IUsername;
 
-public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsername, IScore , ILife{
+public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsername, IScore, ILife {
     private int x, y;
     private int maxHealth;
     private int currentHealth;
@@ -161,6 +158,7 @@ public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsernam
             currentHealth = 0;
         }
     }
+
     public int getDamageToEnemy() {
         if (currentHealth < 50) {
             return 5;

@@ -1,12 +1,9 @@
 /**
- *
  * @author KevinPozo
  * @author BrayanLoya
  * @author JordyChamba
  * Title: Proyecto Galaga (Game).
- *
- *
- * */
+ */
 package Model;
 
 import java.awt.Color;

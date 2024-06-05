@@ -1,12 +1,9 @@
 /**
- *
  * @author KevinPozo
  * @author BrayanLoya
  * @author JordyChamba
  * Title: Proyecto Galaga (Game).
- *
- *
- * */
+ */
 package Model;
 
 import java.awt.Color;
@@ -23,9 +20,10 @@ public class Line implements IDrawable {
         this.x2 = x2;
         this.y2 = y2;
     }
+
     @Override
     public void draw(Graphics g) {
-        g.setColor(Color.WHITE); 
+        g.setColor(Color.WHITE);
         g.drawLine(x1, y1, x2, y2);
     }
 
