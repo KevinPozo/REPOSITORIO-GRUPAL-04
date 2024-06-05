@@ -63,8 +63,6 @@ public class GameController {
 		int startY = 50;
 		int gapX = 100;
 		int enemySpeedFactor = 1;
-
-		// Level-specific enemy configurations (modified for clarity and efficiency)
 		int numEnemies;
 		int enemyScore;
 		switch (level) {
@@ -184,11 +182,11 @@ public class GameController {
 			for (IDrawable drawable : drawables) {
 				if (drawable instanceof Enemy) {
 					Enemy enemy = (Enemy) drawable;
-					if (enemy.getMaxHealth() == 100) { // Si es el super enemigo
+					if (enemy.getMaxHealth() == 100) {
 						int barWidth1 = 100;
 						int barHeight1 = 10;
 						int barX1 = enemy.getX();
-						int barY1 = enemy.getY() - 25; // Ajusta la posición de la barra de vida
+						int barY1 = enemy.getY() - 25;
 						double healthPercentage1 = (double) enemy.getCurrentHealth() / enemy.getMaxHealth();
 
 						g.setColor(Color.BLACK);
@@ -273,13 +271,13 @@ public class GameController {
 							Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
 							if (bulletRect.intersects(enemyRect)) {
 								bulletIterator.remove();
-								if (level == 3 && enemy.getMaxHealth() == 100) { // Super enemigo del nivel 3
+								if (level == 3 && enemy.getMaxHealth() == 100) {
 									if (hero.getCurrentHealth() < 50) {
-										enemy.decreaseHealth(enemy.getScore());
+										enemy.decreaseHealth(5);
 									} else if (hero.getCurrentHealth() >= 50 && hero.getCurrentHealth() <= 75) {
-										enemy.decreaseHealth(enemy.getScore());
+										enemy.decreaseHealth(10);
 									} else {
-										enemy.decreaseHealth(enemy.getScore());
+										enemy.decreaseHealth(15);
 									}
 									if (enemy.isDead()) {
 										hero.increaseScore(enemy.getScore());
