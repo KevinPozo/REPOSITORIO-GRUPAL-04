@@ -122,6 +122,7 @@ public class GameController {
     }
 
     public void update() {
+
         if (!paused) {
             moveEnemies();
             movables.forEach(movable -> movable.move(0, 0));
@@ -140,6 +141,7 @@ public class GameController {
                 }
             }
         }
+
     }
 
     public void render(Graphics g) {
@@ -282,21 +284,25 @@ public class GameController {
     }
 
     public void heroShoot() {
-        int heroX = hero.getX();
-        int heroY = hero.getY();
-        Bullet bullet = new Bullet((heroX + hero.getWidth() / 2) - 27, heroY - 15, 5, 10, 10, false);
-        addShootable(bullet);
+        if (!paused) {
+            int heroX = hero.getX();
+            int heroY = hero.getY();
+            Bullet bullet = new Bullet((heroX + hero.getWidth() / 2) - 27, heroY - 15, 5, 10, 10, false);
+            addShootable(bullet);
+        }
     }
 
     public void moveHero(int dx, int dy, int speed) {
-        if (hero != null) {
-            int newX = (hero.getX() + dx * speed) - 25;
-            int newY = hero.getY() + dy * speed;
+        if (!paused) {
+            if (hero != null) {
+                int newX = (hero.getX() + dx * speed) - 25;
+                int newY = hero.getY() + dy * speed;
 
-            int playerBottom = newY + hero.getHeight();
-            if (newX >= 0 && newX + hero.getWidth() <= WIDTH && newY >= 0 && playerBottom <= HEIGHT
-                    && newY >= PLAYER_TOP_LIMIT) {
-                hero.move(dx * speed, dy * speed);
+                int playerBottom = newY + hero.getHeight();
+                if (newX >= 0 && newX + hero.getWidth() <= WIDTH && newY >= 0 && playerBottom <= HEIGHT
+                        && newY >= PLAYER_TOP_LIMIT) {
+                    hero.move(dx * speed, dy * speed);
+                }
             }
         }
     }
