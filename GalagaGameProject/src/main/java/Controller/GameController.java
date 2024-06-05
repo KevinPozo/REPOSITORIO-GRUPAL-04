@@ -217,7 +217,6 @@ public class GameController {
     public void togglePause() {
         paused = !paused;
     }
-
     private void handleDeadElements() {
         Iterator<IDieable> deadIterator = deadElements.iterator();
         while (deadIterator.hasNext()) {
