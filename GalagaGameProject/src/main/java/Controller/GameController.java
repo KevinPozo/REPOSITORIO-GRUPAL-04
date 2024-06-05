@@ -65,22 +65,26 @@ public class GameController {
 		int startY = 50;
 		int gapX = 100;
 		int enemySpeedFactor = 1;
-		int numEnemies = 0;
-		int enemyScore = 0;
-		if(level==1){
-		numEnemies = 5;
-		enemyScore = 5;
-		}else if (level == 2) {
-			numEnemies = 10;
-			enemyScore = 10;
-		}else if(level==3){
-			numEnemies = 1;
-			enemyScore = 15;
-			enemyWidth *=2.5;
-			enemyHeight *=2.5;
-			startX = 200;
-		} else if (level>=4) {
-
+		int numEnemies;
+		int enemyScore;
+		switch (level) {
+			case 1:
+				numEnemies = 5;
+				enemyScore = 5;
+				break;
+			case 2:
+				numEnemies = 10;
+				enemyScore = 10;
+				break;
+			case 3:
+				numEnemies = 1;
+				enemyScore = 15;
+				enemyWidth *= 2.5;
+				enemyHeight *= 2.5;
+				startX = 200;
+				break;
+			default:
+				return;
 		}
 		for (int i = 0; i < numEnemies; i++) {
 			Enemy enemy = new Enemy(startX + (i % 5) * gapX, startY + (i / 5) * gapX, enemyWidth, enemyHeight, enemyScore, this);
@@ -182,11 +186,11 @@ public class GameController {
 			for (IDrawable drawable : drawables) {
 				if (drawable instanceof Enemy) {
 					Enemy enemy = (Enemy) drawable;
-					if (enemy.getMaxHealth() == 100) { // Si es el super enemigo
+					if (enemy.getMaxHealth() == 100) {
 						int barWidth1 = 100;
 						int barHeight1 = 10;
 						int barX1 = enemy.getX();
-						int barY1 = enemy.getY() - 25; // Ajusta la posición de la barra de vida
+						int barY1 = enemy.getY() - 25;
 						double healthPercentage1 = (double) enemy.getCurrentHealth() / enemy.getMaxHealth();
 
 						g.setColor(Color.BLACK);
@@ -283,7 +287,7 @@ public class GameController {
 							Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
 							if (bulletRect.intersects(enemyRect)) {
 								bulletIterator.remove();
-								if (level == 3 && enemy.getMaxHealth() == 100) { // Super enemigo del nivel 3
+								if (level == 3 && enemy.getMaxHealth() == 100) {
 									if (hero.getCurrentHealth() < 50) {
 										enemy.decreaseHealth(5);
 									} else if (hero.getCurrentHealth() >= 50 && hero.getCurrentHealth() <= 75) {
@@ -322,11 +326,11 @@ public class GameController {
 					if (bulletRect.intersects(heroRect)) {
 						bulletIterator.remove();
 						if (level == 1) {
-							lifeHero.decreaseHealth(5); // Reduce la vida en 5 en nivel 1
+							lifeHero.decreaseHealth(5);
 						} else if (level == 2) {
-							lifeHero.decreaseHealth(10); // Reduce la vida en 10 en nivel 2
+							lifeHero.decreaseHealth(10);
 						} else if (level == 3) {
-							lifeHero.decreaseHealth(15); // Reduce la vida en 15 en nivel 3
+							lifeHero.decreaseHealth(15);
 						}
 						if (lifeHero.getCurrentHealth() <= 0) {
 							gameOver = true;
