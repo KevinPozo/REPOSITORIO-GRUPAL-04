@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All Scores</title>
+</head>
+<body>
+<h1>All Scores</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Username</th>
+        <th>Score</th>
+        <th>Level</th>
+        <th>Health</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="score : ${scores}">
+        <td th:text="${score.username}"></td>
+        <td th:text="${score.score}"></td>
+        <td th:text="${score.level}"></td>
+        <td th:text="${score.health}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
