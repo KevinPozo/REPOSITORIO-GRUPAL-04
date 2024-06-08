@@ -1,9 +1,3 @@
-/**
- * @author KevinPozo
- * @author BrayanLoya
- * @author JordyChamba
- * Title: Proyecto Galaga (Game).
- */
 package Controller;
 
 import java.awt.Color;
@@ -14,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import javax.swing.*;
 
 import Model.Enemy;
 import Model.Hero;
@@ -23,6 +18,7 @@ import Model.Interfaces.ILife;
 import Model.Interfaces.IMovable;
 import Model.Bullet;
 import Model.Line;
+import View.GameView;
 
 public class GameController {
     private static final int HEIGHT = 600;
@@ -31,34 +27,39 @@ public class GameController {
     private List<IMovable> movables;
     private List<IDrawable> bullets;
     private List<IDieable> deadElements;
+    private JPanel gamePanel;
+
     private int level;
     private Random random;
-    private int enemyShootCooldown = 65;
+    private int enemyShootCooldown = 75;
     private int enemyShootTimer = enemyShootCooldown;
     private static final int PLAYER_TOP_LIMIT = 2 * HEIGHT / 3 + 21;
     private static final int LINE_Y_POSITION = 2 * HEIGHT / 3;
     private boolean gameOver = false;
-    private int rapidFireCounter = 0;
-    private int rapidFireDelay = 3;
-    private int rapidFireDelayCounter = 0;
     private Hero hero;
     private ILife lifeHero;
     private boolean paused = false;
     private String pauseMessage = "Press 'P' to pause/unpause";
+    private String heroName;
 
-    public GameController() {
+    private GameView gameView; // Añade un campo para guardar una referencia al GameView
+
+    public GameController(JPanel gamePanel, String heroName, GameView gameView) {
+        this.gamePanel = gamePanel;
+        this.gameView = gameView; // Guarda una referencia al GameView
         drawables = new ArrayList<>();
         movables = new ArrayList<>();
         bullets = new ArrayList<>();
         deadElements = new ArrayList<>();
         random = new Random();
         level = 1;
-        hero = new Hero(400, 450, 50, 25, null, this);
+        hero = new Hero(400, 450, 50, 25, heroName, this);
         addDrawable(hero);
         addMovable(hero);
         createEnemies();
         addLife(hero);
     }
+
 
     private void createEnemies() {
         int enemyWidth = 50;
@@ -124,42 +125,28 @@ public class GameController {
         addMovable((IMovable) life);
     }
 
+    public void update(String heroName) {
 
-
-    public void update() {
         if (!paused) {
             moveEnemies();
             movables.forEach(movable -> movable.move(0, 0));
             moveEnemiesDown();
             handleDeadElements();
             checkEnemiesCrossedLine();
-            checkGameOver();
+            checkGameOver(heroName);
             checkBulletCollision();
             enemyShootTimer--;
-
             if (!gameOver && enemyShootTimer <= 0 && level <= 3) {
+                enemyShoot();
                 if (level == 3) {
-                    if (rapidFireCounter < 3) {
-                        if (rapidFireDelayCounter >= rapidFireDelay) {
-                            enemyShoot();
-                            rapidFireCounter++;
-                            rapidFireDelayCounter = 0;
-                        } else {
-                            rapidFireDelayCounter++;
-                        }
-                    } else {
-                        rapidFireCounter = 0;
-                        enemyShootTimer += enemyShootCooldown;
-                    }
+                    enemyShootTimer += enemyShootCooldown;
                 } else {
-                    enemyShoot();
                     enemyShootTimer = enemyShootCooldown;
                 }
             }
         }
+
     }
-
-
 
     public void render(Graphics g) {
         Line line = new Line(0, LINE_Y_POSITION, WIDTH, LINE_Y_POSITION);
@@ -234,7 +221,6 @@ public class GameController {
     public void togglePause() {
         paused = !paused;
     }
-
     private void handleDeadElements() {
         Iterator<IDieable> deadIterator = deadElements.iterator();
         while (deadIterator.hasNext()) {
@@ -407,10 +393,27 @@ public class GameController {
         }
     }
 
-    private void checkGameOver() {
-        if (lifeHero.getCurrentHealth() <= 0 || level >= 4) {
+    private void checkGameOver(String heroName) {
+        if (lifeHero.getCurrentHealth() <= 0 || this.level >= 4) {
             gameOver = true;
+            System.out.println("Game Over! Sending score...");
+            GameDataSender.extractGameData(hero, this); // Aquí se llama al método para enviar los datos al servidor
+            if (SwingUtilities.getWindowAncestor(gamePanel) != null) { // Utiliza directamente el campo gamePanel
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(gamePanel);
+                frame.dispose();
+            }
+            System.exit(0);
         }
+    }
+
+
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     private void levelUp() {
@@ -420,6 +423,10 @@ public class GameController {
 
     public void setUserName(String name) {
         hero.setUsername(name);
+    }
+
+    public String getHeroName() { // Método para obtener el nombre del héroe
+        return heroName;
     }
 }
 
