@@ -1,3 +1,9 @@
+/**
+ * @author KevinPozo
+ * @author BrayanLoya
+ * @author JordyChamba
+ * Title: Proyecto Persistence (Springboot).
+ */
 package ec.edu.uce.PersistenceProject.Model;
 
 import jakarta.persistence.*;

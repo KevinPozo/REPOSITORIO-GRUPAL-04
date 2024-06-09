@@ -1,3 +1,9 @@
+/**
+ * @author KevinPozo
+ * @author BrayanLoya
+ * @author JordyChamba
+ * Title: Proyecto Persistence (Springboot).
+ */
 package ec.edu.uce.PersistenceProject.Service;
 
 import ec.edu.uce.PersistenceProject.Model.GameEntity;
@@ -21,7 +27,7 @@ public class GameService {
         try {
             System.out.println("Saving score for username: "
                     + username + " with score: " + score
-                    + " Nivel que llego: "+ level + " health: " + health);
+                    + " Level: "+ level + " health: " + health);
             GameEntity gameState = new GameEntity(username, score, level, health);
             gameRepository.save(gameState);
         } catch (Exception e) {
