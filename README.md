@@ -9,6 +9,25 @@ El paquete GalagaGameProject incluye un juego desarrollado con tres niveles. Cad
 # PersistenceProject
 El paquete PersistenceProject está basado en Spring Boot y se encarga de almacenar y gestionar los datos del juego. Este paquete no solo guarda los datos, sino que también permite visualizarlos. Los datos se pueden visualizar tanto en MySQL como en una URL creada específicamente para este propósito.
 
+# Implementa la lógica de persistencia de datos utilizando Spring Boot.
+- Los datos se almacenan en una base de datos MySQL.
+- Los datos guardados pueden visualizarse tanto en MySQL como a través de una URL proporcionada.
+
+# Requisitos
+# Para el Proyecto de Persistencia
+1. MySQL
+  - Debes tener MySQL instalado y configurado en tu sistema.
+  - Crear una base de datos llamada test.
+  - Crear una tabla llamada game_entity con la siguiente estructura
+  - "CREATE TABLE game_entity (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    health INT NOT NULL,
+    level INT NOT NULL,
+    score INT NOT NULL,
+    username VARCHAR(255) NOT NULL
+);
+"
+
 # Visualización de Datos
 Para visualizar los datos guardados, puedes acceder a la siguiente URL:
 http://localhost:8080/api/game/getAllScores.
