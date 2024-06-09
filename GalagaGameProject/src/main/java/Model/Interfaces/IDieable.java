@@ -7,7 +7,7 @@
 package Model.Interfaces;
 
 public interface IDieable {
-    public void die();
+    void die();
 
-    public boolean isDead();
+    boolean isDead();
 }

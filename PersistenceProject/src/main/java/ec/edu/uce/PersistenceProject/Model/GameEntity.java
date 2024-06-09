@@ -30,7 +30,6 @@ public class GameEntity {
         this.health = health;
     }
 
-    // Getters y setters
     public Long getId() {
         return id;
     }
@@ -71,14 +70,4 @@ public class GameEntity {
         this.health = health;
     }
 
-    @Override
-    public String toString() {
-        return "GameScore{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", score=" + score +
-                ", level=" + level +
-                ", health=" + health +
-                '}';
-    }
 }

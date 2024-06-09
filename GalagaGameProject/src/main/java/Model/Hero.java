@@ -6,19 +6,11 @@
  */
 package Model;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.Polygon;
 
 import Controller.GameController;
-import Model.Interfaces.IDieable;
-import Model.Interfaces.IDrawable;
-import Model.Interfaces.ILife;
-import Model.Interfaces.IMovable;
-import Model.Interfaces.IScore;
-import Model.Interfaces.IShootable;
-import Model.Interfaces.IUsername;
+import Model.Interfaces.*;
 
 public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsername, IScore, ILife {
     private int x, y;
@@ -52,9 +44,7 @@ public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsernam
 
         Font font = new Font("Comic Sans MS", Font.BOLD, 16);
         g.setFont(font);
-
         g.drawString("Player: " + getUsername(), 10, 20);
-
         g.drawString("Score: " + getScore(), 10, 40);
 
         int barWidth = 100;
@@ -68,6 +58,7 @@ public class Hero implements IDrawable, IMovable, IShootable, IDieable, IUsernam
 
         g.setColor(Color.RED);
         g.fillRect(barX, barY, (int) (barWidth * healthPercentage), barHeight);
+
         g.setColor(Color.WHITE);
         g.setFont(new Font("Comic Sans MS", Font.PLAIN, 12));
         int textWidth = g.getFontMetrics().stringWidth("Life: " + getCurrentHealth());

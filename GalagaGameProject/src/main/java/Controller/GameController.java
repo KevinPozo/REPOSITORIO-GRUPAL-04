@@ -1,3 +1,9 @@
+/**
+ * @author KevinPozo
+ * @author BrayanLoya
+ * @author JordyChamba
+ * Title: Proyecto Galaga (Game).
+ */
 package Controller;
 
 import java.awt.Color;
@@ -42,11 +48,11 @@ public class GameController {
     private String pauseMessage = "Press 'P' to pause/unpause";
     private String heroName;
 
-    private GameView gameView; // Añade un campo para guardar una referencia al GameView
+    private GameView gameView;
 
     public GameController(JPanel gamePanel, String heroName, GameView gameView) {
         this.gamePanel = gamePanel;
-        this.gameView = gameView; // Guarda una referencia al GameView
+        this.gameView = gameView;
         drawables = new ArrayList<>();
         movables = new ArrayList<>();
         bullets = new ArrayList<>();
@@ -59,7 +65,6 @@ public class GameController {
         createEnemies();
         addLife(hero);
     }
-
 
     private void createEnemies() {
         int enemyWidth = 50;
@@ -126,7 +131,6 @@ public class GameController {
     }
 
     public void update(String heroName) {
-
         if (!paused) {
             moveEnemies();
             movables.forEach(movable -> movable.move(0, 0));
@@ -145,7 +149,6 @@ public class GameController {
                 }
             }
         }
-
     }
 
     public void render(Graphics g) {
@@ -221,6 +224,7 @@ public class GameController {
     public void togglePause() {
         paused = !paused;
     }
+
     private void handleDeadElements() {
         Iterator<IDieable> deadIterator = deadElements.iterator();
         while (deadIterator.hasNext()) {
@@ -397,16 +401,14 @@ public class GameController {
         if (lifeHero.getCurrentHealth() <= 0 || this.level >= 4) {
             gameOver = true;
             System.out.println("Game Over! Sending score...");
-            GameDataSender.extractGameData(hero, this); // Aquí se llama al método para enviar los datos al servidor
-            if (SwingUtilities.getWindowAncestor(gamePanel) != null) { // Utiliza directamente el campo gamePanel
+            GameDataSender.extractGameData(hero, this);
+            if (SwingUtilities.getWindowAncestor(gamePanel) != null) {
                 JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(gamePanel);
                 frame.dispose();
             }
             System.exit(0);
         }
     }
-
-
 
     public int getLevel() {
         return level;
@@ -425,8 +427,7 @@ public class GameController {
         hero.setUsername(name);
     }
 
-    public String getHeroName() { // Método para obtener el nombre del héroe
+    public String getHeroName() {
         return heroName;
     }
 }
-

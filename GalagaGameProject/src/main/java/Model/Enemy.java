@@ -1,3 +1,9 @@
+/**
+ * @author KevinPozo
+ * @author BrayanLoya
+ * @author JordyChamba
+ * Title: Proyecto Galaga (Game).
+ */
 package Model;
 
 import java.awt.*;
@@ -5,11 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Controller.GameController;
-import Model.Interfaces.IDieable;
-import Model.Interfaces.IDrawable;
-import Model.Interfaces.IMovable;
-import Model.Interfaces.IScore;
-import Model.Interfaces.IShootable;
+import Model.Interfaces.*;
 
 public class Enemy implements IDrawable, IMovable, IDieable, IScore, IShootable {
     private int x, y;

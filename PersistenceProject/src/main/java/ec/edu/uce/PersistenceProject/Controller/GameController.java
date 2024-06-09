@@ -30,7 +30,6 @@ public class GameController {
         return "game_scores";
     }
 
-
     @GetMapping("/getScore")
     public GameEntity getScore(@RequestParam String username) {
         return gameService.getScoreByUsername(username);

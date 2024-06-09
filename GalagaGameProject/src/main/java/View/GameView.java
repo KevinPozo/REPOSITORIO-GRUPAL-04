@@ -1,3 +1,9 @@
+/**
+ * @author KevinPozo
+ * @author BrayanLoya
+ * @author JordyChamba
+ * Title: Proyecto Galaga (Game).
+ */
 package View;
 
 import Controller.GameController;
@@ -14,10 +20,10 @@ public class GameView extends JFrame implements KeyListener {
     private int delay = 1000 / 60;
     private int speed = 6;
     private boolean gameStarted = false;
-    private String heroName; // Campo para almacenar el nombre del héroe
+    private String heroName;
 
     public GameView(String heroName) {
-        this.heroName = heroName; // Guardar el nombre del héroe
+        this.heroName = heroName;
         setTitle("Galaga Game Group 4");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -36,14 +42,14 @@ public class GameView extends JFrame implements KeyListener {
         };
         gamePanel.setPreferredSize(new Dimension(800, 600));
         add(gamePanel);
-        gameController = new GameController(gamePanel, heroName, this); // Pasar el gamePanel, el nombre del héroe y una referencia a GameView
+        gameController = new GameController(gamePanel, heroName, this);
         addKeyListener(this);
         gamePanel.setFocusable(true);
         gamePanel.requestFocus();
         gamePanel.addKeyListener(this);
         gameTimer = new Timer(delay, e -> {
             if (gameStarted) {
-                gameController.update(heroName); // Llamar al método update con el nombre del héroe
+                gameController.update(heroName);
                 gamePanel.repaint();
             }
         });
@@ -52,7 +58,6 @@ public class GameView extends JFrame implements KeyListener {
         setVisible(true);
         gameTimer.start();
     }
-
 
     private void showStartScreen(Graphics g) {
         g.setColor(Color.BLACK);

@@ -1,9 +1,16 @@
+/**
+ * @author KevinPozo
+ * @author BrayanLoya
+ * @author JordyChamba
+ * Title: Proyecto Galaga (Game).
+ */
 package Controller;
 
 import Model.Hero;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+
 public class GameDataSender {
 
     private static final String SERVER_URL = "http://localhost:8080/api/game/saveScore";
@@ -38,5 +45,4 @@ public class GameDataSender {
             e.printStackTrace();
         }
     }
-
 }

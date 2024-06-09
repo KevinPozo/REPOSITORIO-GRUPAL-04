@@ -13,4 +13,3 @@ public interface ILife extends IDrawable, IMovable {
 
     void decreaseHealth(int amount);
 }
-
